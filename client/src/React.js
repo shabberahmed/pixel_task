@@ -29,7 +29,6 @@ const ReactTask = () => {
       setSortedColumn(column);
       setSortOrder('asc');
     }
-
     const sortedData = [...apiData].sort((a, b) => {
       const valueA = getColumnValue(a, column);
       const valueB = getColumnValue(b, column);
@@ -37,7 +36,6 @@ const ReactTask = () => {
       if (valueA === valueB) {
         return 0;
       }
-
       if (['number', 'latitude', 'longitude'].includes(column)) {
         return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
       } else {
@@ -46,12 +44,11 @@ const ReactTask = () => {
           : valueB.toString().localeCompare(valueA.toString());
       }
     });
-
     setApiData(sortedData);
   };
-
   const getColumnValue = (data, column) => {
     if (column === 'name') {
+      console.log(data.name.last,'is data')
       return data.name.last;
     } else if (column === 'latitude') {
       return parseFloat(data.location.coordinates.latitude);
@@ -61,21 +58,17 @@ const ReactTask = () => {
       return data.location[column];
     }
   };
-
   const filteredData = apiData.filter((val) => {
-    const filterColumns = ['city', 'state', 'country', 'cell', 'name.last', 'location.coordinates.latitude', 'location.coordinates.longitude'];
-
+    const filterColumns = ['city', 'state', 'country', 'cell', 'name', 'location.coordinates.latitude', 'location.coordinates.longitude'];
     const searchableText = filterColumns
       .map((column) => {
         const columnValue = getColumnValue(val, column);
         return columnValue !== undefined ? columnValue.toString().toLowerCase() : '';
       })
-      .join(' ');
-
+      .join('');
     return searchableText.includes(filter.toLowerCase());
   });
-
-  return (
+  return(
     <div>
       <div>
     <button ><Link to='/' style={{textDecoration:'none'}}> home</Link></button>
@@ -124,5 +117,4 @@ const ReactTask = () => {
     </div>
   );
 };
-
 export default ReactTask;

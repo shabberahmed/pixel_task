@@ -3,7 +3,8 @@ import './App.css';
 import { Link } from 'react-router-dom';
 
 function Node() {
-  const [data, setData] = useState();
+  const [data, setData] = useState(null);
+  const [previousBidPrices, setPreviousBidPrices] = useState([]);
   const [timer, setTimer] = useState('');
 
   useEffect(() => {
@@ -17,6 +18,13 @@ function Node() {
 
         const jsonData = await response.json();
         setData(jsonData);
+
+        if (jsonData.bidPrice) {
+          setPreviousBidPrices((prevPrices) => {
+            const updatedPrices = [...prevPrices, jsonData.bidPrice].slice(-10);
+            return updatedPrices;
+          });
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -38,7 +46,9 @@ function Node() {
 
   return (
     <div className="App">
-            <button ><Link to='/' style={{textDecoration:'none'}}> home</Link></button>
+      <button>
+        <Link to='/' style={{ textDecoration: 'none' }}>Home</Link>
+      </button>
 
       <h1>{timer}</h1>
       <header className="">
@@ -51,9 +61,16 @@ function Node() {
             <p>Ask Quantity: {data.askQty}</p>
           </div>
         )}
+        <h2>Last 10 Bid Prices</h2>
+        <ul>
+          {previousBidPrices.map((price, index) => (
+            <p key={index}>{index+1}-${price}</p>
+          ))}
+        </ul>
       </header>
     </div>
   );
 }
-
 export default Node;
+
+
